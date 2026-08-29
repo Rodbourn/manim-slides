@@ -44,6 +44,11 @@ with their dependencies. Please checkout the
 [documentation](https://eertmans.be/manim-slides/latest/installation.html)
 for detailed install instructions.
 
+Alternatively, the published [Docker image](docker/README.md) includes Manim,
+Manim Slides, TeX, fonts, and the required rendering libraries. It can render
+scene definitions and produce portable HTML presentations without installing a
+Python environment on the host.
+
 ## Usage
 
 <!-- start usage -->

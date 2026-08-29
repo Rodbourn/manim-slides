@@ -1,0 +1,16 @@
+.git
+.venv
+**/__pycache__
+**/*.py[cod]
+.coverage
+.pytest_cache
+.ruff_cache
+coverage.xml
+build
+dist
+docs/build
+media
+slides
+*_assets
+AGENTS.md
+PORTABLE_HTML_EXPORT_TASK.md

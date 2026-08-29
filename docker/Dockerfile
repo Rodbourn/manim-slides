@@ -71,6 +71,8 @@ ENV VIRTUAL_ENV=/opt/venv
 COPY --from=builder /opt/venv /opt/venv
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
+COPY docker/entrypoint.py /usr/local/lib/manim-slides/entrypoint.py
+
 ARG NB_USER=manimslidesuser
 ARG NB_UID=1000
 ENV USER=${NB_USER}
@@ -79,11 +81,16 @@ ENV HOME=/manim-slides
 
 RUN adduser --disabled-password \
     --gecos "Default user" \
+    --home ${HOME} \
     --uid ${NB_UID} \
     ${NB_USER}
 
-WORKDIR ${HOME}
-RUN chown -R ${NB_USER}:${NB_USER} ${HOME} && chmod 777 ${HOME}
+RUN mkdir /workspace \
+    && chown -R ${NB_USER}:${NB_USER} ${HOME} /workspace \
+    && chmod 777 ${HOME} /workspace
+
+WORKDIR /workspace
 USER ${NB_USER}
 
-CMD ["/bin/bash"]
+ENTRYPOINT ["python", "/usr/local/lib/manim-slides/entrypoint.py"]
+CMD ["--help"]

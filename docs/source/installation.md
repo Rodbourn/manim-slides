@@ -171,3 +171,10 @@ An alternative way to install Manim Slides is to clone the git repository,
 and build the package from source. Read the
 [contributing guide](/contributing/workflow)
 to know how to process.
+
+## Docker
+
+```{include} ../../docker/README.md
+:start-after: <!-- start docker usage -->
+:end-before: <!-- end docker usage -->
+```
