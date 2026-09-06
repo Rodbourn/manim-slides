@@ -31,6 +31,15 @@ def add_stream_from_template_legacy(
     return add_stream(template=template)
 
 
+def _ensure_increasing_dts(packet: av.Packet, last_dts: int | None) -> None:
+    """Force strictly increasing DTS across concatenated inputs, see #540."""
+    if packet.dts is None or last_dts is None or packet.dts > last_dts:
+        return
+    packet.dts = last_dts + 1
+    if packet.pts is not None and packet.pts < packet.dts:
+        packet.pts = packet.dts
+
+
 def concatenate_video_files(files: list[Path], dest: Path) -> None:
     """Concatenate multiple video files into one."""
     if len(files) == 1:
@@ -101,11 +110,7 @@ def concatenate_video_files(files: list[Path], dest: Path) -> None:
             else:
                 continue  # We don't support subtitles
 
-            # stopgap solution for https://github.com/jeertmans/manim-slides/issues/540
-            if last_dts[ptype] is not None and packet.dts <= last_dts[ptype]:
-                packet.dts = last_dts[ptype] + 1
-                if packet.pts is not None and packet.pts < packet.dts:
-                    packet.pts = packet.dts
+            _ensure_increasing_dts(packet, last_dts[ptype])
             last_dts[ptype] = packet.dts
 
             output_container.mux(packet)
